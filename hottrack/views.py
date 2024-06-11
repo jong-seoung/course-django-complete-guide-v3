@@ -3,7 +3,8 @@ from urllib.request import urlopen
 
 from django.db.models import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import DetailView
 
 from hottrack.models import Song
 
@@ -40,3 +41,8 @@ def index(request: HttpRequest) -> HttpResponse:
             "query": query,
         },
     )
+
+# pk 필드로 조회를 할 경우
+song_detail = DetailView.as_view(
+    model=Song,
+)
