@@ -42,7 +42,18 @@ def index(request: HttpRequest) -> HttpResponse:
         },
     )
 
-# pk 필드로 조회를 할 경우
-song_detail = DetailView.as_view(
-    model=Song,
-)
+class SongDetailView(DetailView):
+    model = Song
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        melon_uid = self.kwargs.get("melon_uid")
+        if melon_uid:
+            return get_object_or_404(queryset, melon_uid=melon_uid)
+
+        return super().get_object(queryset)
+
+
+song_detail = SongDetailView.as_view()
