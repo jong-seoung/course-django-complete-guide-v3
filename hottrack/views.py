@@ -4,7 +4,7 @@ from urllib.request import urlopen
 from django.db.models import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView, YearArchiveView
 
 from hottrack.models import Song
 
@@ -57,3 +57,8 @@ class SongDetailView(DetailView):
 
 
 song_detail = SongDetailView.as_view()
+
+class SongYearArchiveView(YearArchiveView):
+    model = Song
+    date_field = "release_date"  # 조회할 날짜 필드
+    make_object_list = True
