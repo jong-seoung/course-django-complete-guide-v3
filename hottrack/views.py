@@ -14,7 +14,8 @@ from django.views.generic import (
     DayArchiveView, 
     TodayArchiveView, 
     WeekArchiveView,
-    ArchiveIndexView
+    ArchiveIndexView,
+    DateDetailView,
     )
 
 from hottrack.models import Song
@@ -126,3 +127,8 @@ class SongArchiveIndexView(ArchiveIndexView):
         context_data = super().get_context_data(**kwargs)
         context_data["date_list_period"] = self.get_date_list_period()
         return context_data
+
+class SongDateDetailView(DateDetailView):
+    model = Song
+    date_field = "release_date"
+    month_format = "%m"
