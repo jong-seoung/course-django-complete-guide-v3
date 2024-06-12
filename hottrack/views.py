@@ -1,10 +1,12 @@
+import datetime
 import json
 from urllib.request import urlopen
+from django.conf import settings
 
 from django.db.models import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView, ListView, YearArchiveView, MonthArchiveView, DayArchiveView
+from django.views.generic import DetailView, ListView, YearArchiveView, MonthArchiveView, DayArchiveView, TodayArchiveView
 
 from hottrack.models import Song
 
@@ -74,3 +76,20 @@ class SongDayArchiveView(DayArchiveView):
     model = Song
     date_field = "release_date"
     month_format = "%m"
+
+
+class SongTodayArchiveView(TodayArchiveView):
+    model = Song
+    date_field = "release_date"
+
+    if settings.DEBUG:
+
+        def get_dated_items(self):
+            """지정 날짜의 데이터를 조회"""
+            fake_today = self.request.GET.get("fake-today", "")
+            try:
+                year, month, day = map(int, fake_today.split("-", 3))
+                return self._get_dated_items(datetime.date(year, month, day))
+            except ValueError:
+                # fake_today 파라미터가 없거나 날짜 형식이 잘못되었을 경우
+                return super().get_dated_items()
