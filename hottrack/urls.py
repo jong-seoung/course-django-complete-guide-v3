@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
@@ -29,5 +29,10 @@ urlpatterns = [
         route="archives/<int:year>/week/<int:week>/",
         view=views.SongWeekArchiveView.as_view(),
         name="song_archive_week",
+    ),
+    re_path(
+        route=r"^archives/(?P<date_list_period>year|month|day|week)?/?$",
+        view=views.SongArchiveIndexView.as_view(),
+        name="song_archive_index",
     ),
 ]
