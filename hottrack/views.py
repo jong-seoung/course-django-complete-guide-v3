@@ -4,7 +4,7 @@ from urllib.request import urlopen
 from django.db.models import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView, ListView, YearArchiveView, MonthArchiveView
+from django.views.generic import DetailView, ListView, YearArchiveView, MonthArchiveView, DayArchiveView
 
 from hottrack.models import Song
 
@@ -68,4 +68,9 @@ class SongMonthArchiveView(MonthArchiveView):
     # paginate_by = None
     date_field = "release_date"
     # 날짜 포맷 : "%m" (숫자, ex: "01", "1" 등), "%b" (디폴트, 월 이름의 약어, ex: "Jan", "Feb" 등)
+    month_format = "%m"
+
+class SongDayArchiveView(DayArchiveView):
+    model = Song
+    date_field = "release_date"
     month_format = "%m"
