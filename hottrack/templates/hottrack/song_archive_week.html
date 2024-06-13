@@ -1,4 +1,5 @@
-{# hottrack/song_archive_week.html #}
+
+{# hottrack/song_archive_year.html #}
 
 {% extends "hottrack/base.html" %}
 
@@ -6,20 +7,20 @@
 
     <div class="p-3 d-flex gap-3">
         <div>
-            <h2>{{ week|date:"Y년 W주" }}</h2>
+            <h2>{{ year|date:"Y년" }}</h2>
 
             <div class="text-center">
                 <div class="btn-group">
-                    {% if previous_week %}
-                        <a href="{% url 'song_archive_week' previous_week.year previous_week.isocalendar.week %}"
+                    {% if previous_year %}
+                        <a href="{% url 'hottrack:song_archive_year' previous_year.year %}"
                            class="btn btn-outline-primary">
-                            {{ previous_week|date:"Y년 W주" }}
+                            {{ previous_year|date:"Y년" }}
                         </a>
                     {% endif %}
-                    {% if next_week %}
-                        <a href="{% url 'song_archive_week' next_week.year next_week.isocalendar.week %}"
+                    {% if next_year %}
+                        <a href="{% url 'hottrack:song_archive_year' next_year.year %}"
                            class="btn btn-outline-primary">
-                            {{ next_week|date:"Y년 W주" }}
+                            {{ next_year|date:"Y년" }}
                         </a>
                     {% endif %}
                 </div>
@@ -30,6 +31,19 @@
                     <li>
                         {{ song.name|truncatechars:20 }}
                         <small class="text-secondary fw-light">{{ song.release_date|date:"Y년 m월 d일" }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <h3>Nav</h3>
+            <ul>
+                {% for date in date_list %}
+                    {# <li>{{ date|date:"Y년 m월" }}</li> #}
+                    <li>
+                        <a href="{% url 'hottrack:song_archive_month' date.year date.month %}">
+                            {{ date|date:"Y년 m월" }}
+                        </a>
                     </li>
                 {% endfor %}
             </ul>

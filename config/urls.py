@@ -8,8 +8,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path(route="core/", view=include("core.urls")),
     path(route="hottrack/", view=include("hottrack.urls")),
-    path("", RedirectView.as_view(url="/hottrack/")),
-]
+    path("", RedirectView.as_view(pattern_name="hottrack:index")),
+    ]
 
 if settings.DEBUG:
     urlpatterns += [
