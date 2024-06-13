@@ -5,16 +5,16 @@ from __future__ import annotations
 from datetime import date
 from typing import Dict
 from urllib.parse import quote
+
+from django.db import models
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.text import slugify
 
-from django.db import models
-
 
 class Song(models.Model):
     melon_uid = models.CharField(max_length=20, unique=True)
-    slug = models.SlugField(allow_unicode=True, blank=True)
+    slug = models.SlugField(max_length=100, allow_unicode=True, blank=True)
     rank = models.PositiveSmallIntegerField()
     album_name = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
@@ -37,6 +37,9 @@ class Song(models.Model):
     def slugify(self, force=False):
         if force or not self.slug:
             self.slug = slugify(self.name, allow_unicode=True)
+
+            slug_max_length = self._meta.get_field("slug").max_length
+            self.slug = self.slug[:slug_max_length]
 
     def get_absolute_url(self) -> str:
         return reverse(
@@ -65,7 +68,7 @@ class Song(models.Model):
 
     @classmethod
     def from_dict(cls, data: Dict) -> Song:
-        return cls(
+        instance = cls(
             melon_uid=data.get("곡일련번호"),
             rank=int(data.get("순위")),
             album_name=data.get("앨범"),
@@ -77,3 +80,5 @@ class Song(models.Model):
             release_date=date.fromisoformat(data.get("발매일")),
             like_count=int(data.get("좋아요")),
         )
+        instance.slugify()
+        return instance
