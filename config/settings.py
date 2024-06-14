@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django_bootstrap5",
     'core',
     'hottrack',
+    'blog',
 ]
 
 if DEBUG:
