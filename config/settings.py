@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'core',
     'hottrack',
     'blog',
+    'shop',
 ]
 
 if DEBUG:
