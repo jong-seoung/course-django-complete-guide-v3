@@ -5,6 +5,8 @@ from django.db import models
 from django.db.models import UniqueConstraint
 from django.utils.text import slugify
 
+from core.model_fields import IPv4AddressIntegerField
+
 class Category(models.Model):
     name = models.CharField(max_length=50)
 
@@ -85,3 +87,8 @@ class Post(models.Model):
         constraints = [
             UniqueConstraint(fields=["slug"], name="unique_slug"),
         ]
+
+class AccessLog(models.Model):
+    ip_generic = models.GenericIPAddressField(protocol="IPv4")
+    ip_int = IPv4AddressIntegerField()
+    
