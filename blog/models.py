@@ -87,6 +87,8 @@ class Post(models.Model):
         constraints = [
             UniqueConstraint(fields=["slug"], name="unique_slug"),
         ]
+        verbose_name = "포스팅"
+        verbose_name_plural = "포스팅 목록"
 
 class AccessLog(models.Model):
     ip_generic = models.GenericIPAddressField(protocol="IPv4")
