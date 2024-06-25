@@ -1,3 +1,4 @@
+# blog/models.py
 from uuid import uuid4
 
 from django.conf import settings
@@ -8,8 +9,18 @@ from django.utils.text import slugify
 
 from core.model_fields import IPv4AddressIntegerField, BooleanYNField
 
+
+class TimestampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)  # 최초 생성시각을 자동 저장
+    updated_at = models.DateTimeField(auto_now=True)  # 매 수정시각을 자동 저장
+
+    class Meta:
+        abstract = True
+
+
 class Category(models.Model):
     name = models.CharField(max_length=50)
+
 
 class PostQuerySet(models.QuerySet):
     def published(self):
@@ -28,19 +39,21 @@ class PostQuerySet(models.QuerySet):
         kwargs.setdefault("status", Post.Status.PUBLISHED)
         return super().create(**kwargs)
 
+
 # class PublishedPostManager(models.Manager):
 #     def get_queryset(self):
 #         qs = super().get_queryset()
 #         qs = qs.filter(status=Post.Status.PUBLISHED)
 #         return qs
-
+#
 #     def create(self, **kwargs):
 #         kwargs.setdefault("status", Post.Status.PUBLISHED)
 #         return super().create(**kwargs)
 
-class Post(models.Model):
-    class Status(models.TextChoices): # 문자열 선택지
-        DRAFT = "D", "초안"            # 상수, 값, 레이블
+
+class Post(TimestampedModel):
+    class Status(models.TextChoices):  # 문자열 선택지
+        DRAFT = "D", "초안"  # 상수, 값, 레이블
         PUBLISHED = "P", "발행"
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -59,9 +72,6 @@ class Post(models.Model):
         default=Status.DRAFT,
     )
     content = models.TextField()
-
-    created_at = models.DateTimeField(auto_now_add=True)  # 최초 생성시각을 자동 저장
-    updated_at = models.DateTimeField(auto_now=True)      # 매 수정시각을 자동 저장
 
     # published = PublishedPostManager()
     # objects = models.Manager()
@@ -91,12 +101,18 @@ class Post(models.Model):
         verbose_name = "포스팅"
         verbose_name_plural = "포스팅 목록"
 
-class AccessLog(models.Model):
+
+class Comment(TimestampedModel):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    message = models.TextField()
+
+
+class AccessLog(TimestampedModel):
     ip_generic = models.GenericIPAddressField(protocol="IPv4")
     ip_int = IPv4AddressIntegerField()
 
 
-class Article(models.Model):
+class Article(TimestampedModel):
     title = models.CharField(max_length=100)
     is_public_ch = models.CharField(
         max_length=1,
@@ -108,22 +124,24 @@ class Article(models.Model):
     )
     is_public_yn = BooleanYNField(default=False)
 
-class Review(models.Model):
+
+class Review(TimestampedModel, models.Model):
     message = models.TextField()
     rating = models.SmallIntegerField(
         # validators=[
         #     MinValueValidator(1),
         #     MaxValueValidator(5),
-        # ]
+        # ],
     )
 
     class Meta:
         constraints = [
             models.CheckConstraint(
                 check=Q(rating__gte=1, rating__lte=5),
-                name='blog_review_rating_gte_1_lte_5'
-            )
+                name="blog_review_rating_gte_1_lte_5",
+            ),
         ]
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)
