@@ -35,4 +35,20 @@ class SongAdmin(admin.ModelAdmin):
 
         self.message_user(request, f"{changed_count} 곡의 좋아요 갱신 완료")
 
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    # def has_view_permission(self, request, obj=None):
+    #     return super().has_view_permission(request, obj)
+
+    def update_like_count(self, request, queryset):
+        melon_uid_list = queryset.values_list("melon_uid", flat=True)
+        likes_dict = get_likes_dict(melon_uid_list)
+        
 # admin.site.register(Song, SongAdmin)
