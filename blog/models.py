@@ -22,6 +22,8 @@ class TimestampedModel(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=50)
 
+    def __str__(self) -> str:
+        return self.name
 
 class PostQuerySet(models.QuerySet):
     def published(self):
@@ -73,6 +75,7 @@ class Post(TimestampedModel):
         default=Status.DRAFT,
     )
     content = models.TextField()
+    tag_set = models.ManyToManyField("Tag", blank=True)
 
     # published = PublishedPostManager()
     # objects = models.Manager()
@@ -106,7 +109,9 @@ class Post(TimestampedModel):
         ]
 
 class Comment(TimestampedModel):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
     message = models.TextField()
 
 
@@ -150,6 +155,9 @@ class Review(TimestampedModel, models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=100)
 
+    def __str__(self) -> str:
+        return self.name
+    
     class Meta:
         ordering = ["name"]
         constraints = [
