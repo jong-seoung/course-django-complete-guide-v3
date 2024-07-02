@@ -10,3 +10,5 @@ migrate:
 sqlmigrate:
 	python manage.py sqlmigrate $(app) $(file)
 
+shell_plus:
+	python manage.py shell_plus --print-sql --quiet-load
