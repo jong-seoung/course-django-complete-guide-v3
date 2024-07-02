@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(DEBUG=(bool, True))
 environ.Env.read_env(env_file=os.path.join(BASE_DIR, ".environ"))
 SECRET_KEY = env("SECRET_KEY")
-
+ADMIN_PREFIX = os.environ.get("ADMIN_PREFIX", "secret-admin/")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

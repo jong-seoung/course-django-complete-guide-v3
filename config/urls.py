@@ -5,7 +5,7 @@ from django.urls import path, include
 from django.views.generic import RedirectView, TemplateView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(settings.ADMIN_PREFIX, admin.site.urls),
     path("blog/", include("blog.urls")),
     path(route="core/", view=include("core.urls")),
     path(route="hottrack/", view=include("hottrack.urls")),
