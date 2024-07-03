@@ -7,6 +7,9 @@ makemigrations:
 migrate:
 	python manage.py migrate $(app)
 
+showmigrations:
+	python manage.py showmigrations $(app)
+
 sqlmigrate:
 	python manage.py sqlmigrate $(app) $(file)
 
