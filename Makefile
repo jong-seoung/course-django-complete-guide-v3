@@ -5,7 +5,7 @@ makemigrations:
 	python manage.py makemigrations $(app)
 
 migrate:
-	python manage.py migrate $(app)
+	python manage.py migrate $(app) $(file)
 
 showmigrations:
 	python manage.py showmigrations $(app)
