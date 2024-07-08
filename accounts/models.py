@@ -1,3 +1,5 @@
+import datetime
+
 from typing import Iterable
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
@@ -5,6 +7,7 @@ from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
+from core.model_fields import DatePickerField
 
 class User(AbstractUser):
     # 친구 관계 (대칭 관계)
@@ -56,7 +59,12 @@ class Profile(models.Model):
         related_name="profile",
         related_query_name="profile",
     )
-    birth_date = models.DateField(blank=True, null=True)
+    birth_date = DatePickerField(
+        min_value=lambda: datetime.date.today(),
+        max_value=lambda: datetime.date.today() + datetime.timedelta(days=7),
+        blank=True,
+        null=True,
+    )
     address = models.CharField(max_length=100, blank=True)
     phone_number = models.CharField(
         max_length=13,
