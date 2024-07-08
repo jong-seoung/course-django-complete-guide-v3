@@ -3,7 +3,7 @@ from django.core.files import File
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from vanilla import CreateView
+from vanilla import CreateView, ListView, DetailView, UpdateView
 
 from blog.forms import ReviewForm
 from blog.models import Post, Review
@@ -90,6 +90,20 @@ def post_new(request):
     )
 
 review_new = CreateView.as_view(
+    model=Review,
+    form_class=ReviewForm,
+    # success_url=reverse_lazy(""),
+)
+
+review_list = ListView.as_view(
+    model=Review,
+)
+
+review_detail = DetailView.as_view(
+    model=Review,
+)
+
+review_edit = UpdateView.as_view(
     model=Review,
     form_class=ReviewForm,
 )
