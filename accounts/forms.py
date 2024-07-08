@@ -5,7 +5,7 @@ from core.forms.fields import PhoneNumberField
 from core.forms.widgets import PhoneNumberInput
 
 class ProfileForm(forms.ModelForm):
-    phone_number = PhoneNumberField()
+    # phone_number = PhoneNumberField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -15,9 +15,9 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = [
             "address",
-            # "phone_number",
+            "phone_number",
             "photo",
         ]
         widgets = {
-            # "phone_number": PhoneNumberInput,
+            "phone_number": PhoneNumberInput,
         }
