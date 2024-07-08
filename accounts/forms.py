@@ -3,10 +3,14 @@ import datetime
 from django import forms
 from .models import Profile
 
-from core.forms.fields import PhoneNumberField
+from core.forms.fields import PhoneNumberField, DatePickerField
 from core.forms.widgets import PhoneNumberInput, DatePickerInput, DatePickerOptions
 
 class ProfileForm(forms.ModelForm):
+    mydate = DatePickerField(
+        min_value=lambda: datetime.date.today(),
+        max_value=lambda: datetime.date.today() + datetime.timedelta(days=7),
+    )
     # phone_number = PhoneNumberField()
 
     def __init__(self, *args, **kwargs):
