@@ -17,6 +17,7 @@ class Post(models.Model):
         max_length=1, choices=Status.choices, default=Status.DRAFT
     )
     photo = models.ImageField(blank=True)
+    is_public = models.BooleanField(default=False)
     created_date = models.DateField(auto_now_add=True)
     ip = models.GenericIPAddressField()
     # Generic Relation에서는 1측에 관계를 정의하므로, 모델 클래스에 직접적으로 필드를 정의
