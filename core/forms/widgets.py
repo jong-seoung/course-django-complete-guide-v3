@@ -1,6 +1,6 @@
 # core/forms/widgets.py
 
-from django.forms import TextInput, CheckboxInput, ClearableFileInput
+from django.forms import TextInput, CheckboxInput, ClearableFileInput, RadioSelect
 
 
 class CounterTextInput(TextInput):
@@ -23,3 +23,6 @@ class IosSwitchInput(CheckboxInput):
 
 class PreviewClearableFileInput(ClearableFileInput):
     template_name = "core/forms/widgets/preview_clearable_file.html"
+
+class HorizontalRadioSelect(RadioSelect):
+    template_name = "core/forms/widgets/horizontal_radio.html"
