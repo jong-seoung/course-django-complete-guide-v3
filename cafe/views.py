@@ -3,13 +3,8 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 
-ORDER_COUNTS = {}
-
-
 @csrf_exempt
 def coffee_stamp(request):
-    global ORDER_COUNTS
-
     if request.method == "GET":
         response = HttpResponse(
             """
@@ -20,9 +15,11 @@ def coffee_stamp(request):
         )
     else:
         phone = request.POST["phone"]
-        order_count = ORDER_COUNTS.get(phone, 0)
+        request.session["phone"] = phone
+
+        order_count = request.session.get(phone, 0)
         order_count += 1
-        ORDER_COUNTS[phone] = order_count
+        request.session["order_count"] = order_count
 
         response = HttpResponse(
             f"""
@@ -31,20 +28,21 @@ def coffee_stamp(request):
             <a href="/cafe/free-coffee/">무료커피를 신청해주세요.</a>
             """
         )
-        response.set_cookie("phone", phone)
 
     return response
 
 
 def coffee_free(request):
-    phone = request.COOKIES.get("phone", "")
+    phone = request.session.get("phone", "")
     if not phone:
         return redirect("cafe:coffee_stamp")
 
-    order_count = ORDER_COUNTS.get(phone, 0)
+    order_count = request.session.get("order_count", 0)
     if order_count < 10:
-        return HttpResponse(
+        response = HttpResponse(
             f"{phone}님. 스탬프 {order_count}번 찍으셨어요. {10-order_count}번 찍으시면 무료쿠폰을 받을 수 있습니다."
         )
     else:
-        return HttpResponse(f"{phone}님. 무료쿠폰을 사용하시겠어요?")
+        response = HttpResponse(f"{phone}님. 무료쿠폰을 사용하시겠어요?")
+
+    return response
