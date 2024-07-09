@@ -2,7 +2,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -111,27 +113,35 @@ class UserProfileWizardView(LoginRequiredMixin, SessionWizardView):
 profile_wizard = UserProfileWizardView.as_view()
 
 
-def login(request):
-    if request.method == "GET":
-        return render(request, "accounts/login_form.html")
-    else:
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+# def login(request):
+#     if request.method == "GET":
+#         return render(request, "accounts/login_form.html")
+#     else:
+#         username = request.POST.get("username")
+#         password = request.POST.get("password")
 
-        user = authenticate(request, username=username, password=password)
-        if user is None:
-            return HttpResponse("인증 실패", status=400)
+#         user = authenticate(request, username=username, password=password)
+#         if user is None:
+#             return HttpResponse("인증 실패", status=400)
 
-        request.session["_auth_user_backend"] = user.backend
-        request.session["_auth_user_id"] = user.pk
-        request.session["_auth_user_hash"] = user.get_session_auth_hash()
+#         request.session["_auth_user_backend"] = user.backend
+#         request.session["_auth_user_id"] = user.pk
+#         request.session["_auth_user_hash"] = user.get_session_auth_hash()
 
-        next_url = (
-            request.POST.get("next")
-            or request.GET.get("next")
-            or settings.LOGIN_REDIRECT_URL
-        )
-        return redirect(next_url)
+#         next_url = (
+#             request.POST.get("next")
+#             or request.GET.get("next")
+#             or settings.LOGIN_REDIRECT_URL
+#         )
+#         return redirect(next_url)
+
+class LoginView(DjangoLoginView):
+    template_name = "accounts/login_form.html"
+    # redirect_authenticated_user = True
+    # next_page = "accounts:profile"
+
+
+login = LoginView.as_view()
 
 
 def profile(request):
