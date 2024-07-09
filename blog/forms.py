@@ -1,8 +1,10 @@
+from crispy_bootstrap5.bootstrap5 import FloatingField
+from crispy_forms.bootstrap import PrependedText
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Submit, Layout, Row, Field
 from django import forms
-
 from django.core.validators import MinLengthValidator, MaxLengthValidator
+
 from core.forms.widgets import HorizontalRadioSelect, StarRatingSelect
 from .models import Review
 
@@ -13,10 +15,10 @@ class ReviewForm(forms.ModelForm):
         fields = ["message", "rating"]
         widgets = {
             "rating": StarRatingSelect(
-            # "rating": HorizontalRadioSelect(
                 choices=[(i, i) for i in range(1, 6)],
             ),
         }
+
 
 class DemoForm(forms.Form):
     author = forms.CharField(label="작성자")
@@ -43,9 +45,22 @@ class DemoForm(forms.Form):
         # self.helper.form_action = ""
         # self.helper.form_tag = True
         # self.helper.disable_csrf = False
+        # self.helper.form_class = "form-horizontal"
+        # self.helper.label_class = "col-sm-4"
+        # self.helper.field_class = "col-sm-8"
         self.helper.attrs = {"novalidate": True}
+        self.helper.layout = Layout(
+            FloatingField("title"),
+            "summary",
+            "content",
+            "content_en",
+            Row(
+                Field("author", autocomplete="off", wrapper_class="col-sm-6"),
+                PrependedText("instagram_username", "@", wrapper_class="col-sm-6"),
+            ),
+        )
         self.helper.add_input(Submit("submit", "제출"))
-        
+
     def clean(self):
         content = self.cleaned_data.get("content")
         summary = self.cleaned_data.get("summary")
