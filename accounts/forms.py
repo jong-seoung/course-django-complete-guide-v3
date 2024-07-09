@@ -5,6 +5,20 @@ from .models import Profile
 
 from core.forms.fields import PhoneNumberField, DatePickerField
 from core.forms.widgets import PhoneNumberInput, DatePickerInput, DatePickerOptions, NaverMapPointInput
+from .models import Profile, User
+
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name"]
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["address", "phone_number", "photo"]
+
 
 class ProfileForm(forms.ModelForm):
     # mydate = DatePickerField(

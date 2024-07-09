@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'crispy_forms',
     'crispy_bootstrap5',
-    'core.crispy_bootstrap5_ext'
+    'core.crispy_bootstrap5_ext',
+    'formtools'
 ]
 
 if DEBUG:
