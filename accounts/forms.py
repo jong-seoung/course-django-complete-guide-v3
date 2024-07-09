@@ -4,7 +4,7 @@ from django import forms
 from .models import Profile
 
 from core.forms.fields import PhoneNumberField, DatePickerField
-from core.forms.widgets import PhoneNumberInput, DatePickerInput, DatePickerOptions
+from core.forms.widgets import PhoneNumberInput, DatePickerInput, DatePickerOptions, NaverMapPointInput
 
 class ProfileForm(forms.ModelForm):
     # mydate = DatePickerField(
@@ -22,6 +22,7 @@ class ProfileForm(forms.ModelForm):
         fields = [
             "birth_date",
             "address",
+            "location_point",
             "phone_number",
             "photo",
         ]
@@ -37,5 +38,6 @@ class ProfileForm(forms.ModelForm):
                     todayHighlight=True,
                 ),
             ),
+            "location_point": NaverMapPointInput,
             "phone_number": PhoneNumberInput,
         }
