@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'school',
     'weblog',
     'accounts',
+    'widget_tweaks',
 ]
 
 if DEBUG:
