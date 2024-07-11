@@ -10,6 +10,7 @@ from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils.http import url_has_allowed_host_and_scheme
 from formtools.wizard.views import SessionWizardView
 from vanilla import UpdateView, CreateView
 
@@ -78,9 +79,9 @@ class UserProfileWizardView(LoginRequiredMixin, SessionWizardView):
     template_name = "accounts/profile_wizard.html"
     file_storage = default_storage
 
-    # condition_dict = {
-    #     "profile_form": check_is_profile_update,
-    # }
+    condition_dict = {
+        "profile_form": check_is_profile_update,
+    }
 
     def get_form_instance(self, step):
         if step == "profile_form":
@@ -120,21 +121,25 @@ profile_wizard = UserProfileWizardView.as_view()
 #     else:
 #         username = request.POST.get("username")
 #         password = request.POST.get("password")
-
+#
 #         user = authenticate(request, username=username, password=password)
 #         if user is None:
 #             return HttpResponse("인증 실패", status=400)
-
+#
+#         if user.is_active is False:
+#             return HttpResponse("비활성화된 계정입니다.", status=400)
+#
 #         request.session["_auth_user_backend"] = user.backend
 #         request.session["_auth_user_id"] = user.pk
 #         request.session["_auth_user_hash"] = user.get_session_auth_hash()
-
+#
 #         next_url = (
 #             request.POST.get("next")
 #             or request.GET.get("next")
 #             or settings.LOGIN_REDIRECT_URL
 #         )
 #         return redirect(next_url)
+
 
 class LoginView(DjangoLoginView):
     template_name = "accounts/login_form.html"
@@ -159,9 +164,19 @@ def profile(request):
 #         if form.is_valid():
 #             created_user = form.save()
 #             auth_login(request, created_user)
+#
+#             next_url = request.POST.get("next") or request.GET.get("next")
+#             url_is_safe = url_has_allowed_host_and_scheme(
+#                 url=next_url,
+#                 allowed_hosts={request.get_host()},
+#                 require_https=request.is_secure(),
+#             )
+#             if url_is_safe is False:
+#                 next_url = ""
+#
 #             # return redirect(settings.LOGIN_URL)  # "/accounts/login/"
-#             return redirect(settings.LOGIN_REDIRECT_URL)
-
+#             return redirect(next_url or settings.LOGIN_REDIRECT_URL)
+#
 #     return render(
 #         request,
 #         "accounts/signup_form.html",
@@ -169,6 +184,7 @@ def profile(request):
 #             "form": form,
 #         },
 #     )
+
 
 class SignupView(CreateView):
     form_class = SignupForm
@@ -180,6 +196,18 @@ class SignupView(CreateView):
         created_user = form.instance
         auth_login(self.request, created_user)
         return response
+
+    def get_success_url(self) -> str:
+        next_url = self.request.POST.get("next") or self.request.GET.get("next")
+        if next_url:
+            url_is_safe = url_has_allowed_host_and_scheme(
+                url=next_url,
+                allowed_hosts={self.request.get_host()},
+                require_https=self.request.is_secure(),
+            )
+            if url_is_safe:
+                return next_url
+        return super().get_success_url()
 
 
 signup = SignupView.as_view()
