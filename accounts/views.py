@@ -19,54 +19,75 @@ from django.views.decorators.http import require_POST
 from formtools.wizard.views import SessionWizardView
 from vanilla import UpdateView, CreateView
 
-from accounts.forms import ProfileForm, UserForm, UserProfileForm, SignupForm
+from accounts.forms import (
+    ProfileForm,
+    UserForm,
+    UserProfileForm,
+    SignupForm,
+    ProfileUserForm,
+    # PasswordChangeForm,
+)
 from accounts.models import Profile
 
 
-# @login_required
-# def profile_edit(request):
-#     try:
-#         instance = request.user.profile
-#     except Profile.DoesNotExist:
-#         instance = None
+@login_required
+def profile_edit(request):
+    try:
+        instance = request.user.profile
+    except Profile.DoesNotExist:
+        instance = None
+
+    if request.method == "GET":
+        profile_user_form = ProfileUserForm(
+            prefix="profile-user", instance=request.user
+        )
+        profile_form = ProfileForm(prefix="profile", instance=instance)
+    else:
+        profile_user_form = ProfileUserForm(
+            prefix="profile-user",
+            data=request.POST,
+            files=request.FILES,
+            instance=request.user,
+        )
+        profile_form = ProfileForm(
+            prefix="profile", data=request.POST, files=request.FILES, instance=instance
+        )
+        if profile_user_form.is_valid() and profile_form.is_valid():
+            profile_user_form.save()
+
+            profile = profile_form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            return redirect("accounts:profile_edit")
+
+    return render(
+        request,
+        "accounts/profile_form.html",
+        {
+            "profile_user_form": profile_user_form,
+            "profile_form": profile_form,
+        },
+    )
+
+
+# class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+#     model = Profile
+#     form_class = ProfileForm
+#     success_url = reverse_lazy("accounts:profile_edit")
 #
-#     if request.method == "GET":
-#         form = ProfileForm(instance=instance)
-#     else:
-#         form = ProfileForm(data=request.POST, files=request.FILES, instance=instance)
-#         if form.is_valid():
-#             profile = form.save(commit=False)
-#             profile.user = request.user
-#             profile.save()
-#             return redirect("accounts:profile_edit")
+#     def get_object(self):
+#         try:
+#             return self.request.user.profile
+#         except Profile.DoesNotExist:
+#             return None
 #
-#     return render(
-#         request,
-#         "accounts/profile_form.html",
-#         {
-#             "form": form,
-#         },
-#     )
-
-
-class ProfileUpdateView(LoginRequiredMixin, UpdateView):
-    model = Profile
-    form_class = ProfileForm
-    success_url = reverse_lazy("accounts:profile_edit")
-
-    def get_object(self):
-        try:
-            return self.request.user.profile
-        except Profile.DoesNotExist:
-            return None
-
-    def form_valid(self, form):
-        profile = form.save(commit=False)
-        profile.user = self.request.user
-        return super().form_valid(form)
-
-
-profile_edit = ProfileUpdateView.as_view()
+#     def form_valid(self, form):
+#         profile = form.save(commit=False)
+#         profile.user = self.request.user
+#         return super().form_valid(form)
+#
+#
+# profile_edit = ProfileUpdateView.as_view()
 
 
 def check_is_profile_update(wizard_view: "UserProfileWizardView") -> bool:
@@ -217,12 +238,13 @@ class SignupView(CreateView):
 
 signup = SignupView.as_view()
 
+
 # @csrf_protect
 # @never_cache
 # @require_POST  # auth.LogoutView에서는 장고 5.0부터 GET 요청을 통한 로그아웃을 지원하지 않습니다.
 # def logout(request):
 #     auth_logout(request)
-
+#
 #     next_url = request.POST.get("next")
 #     if next_url:
 #         url_is_safe = url_has_allowed_host_and_scheme(
@@ -232,9 +254,11 @@ signup = SignupView.as_view()
 #         )
 #         if url_is_safe:
 #             return redirect(next_url)
-
+#
 #     return redirect(settings.LOGIN_URL)
+#
 #     # return render(request, "registration/logged_out.html")
+
 
 logout = LogoutView.as_view(
     # 템플릿 파일을 변경하시거나,
@@ -242,6 +266,7 @@ logout = LogoutView.as_view(
     # next_page 인자를 지정하면, 최소한 템플릿 응답은 없습니다.
     next_page=settings.LOGIN_URL,
 )
+
 
 # @login_required
 # def password_change(request):
@@ -254,7 +279,7 @@ logout = LogoutView.as_view(
 #             update_session_auth_hash(request, request.user)
 #             messages.success(request, "암호를 변경했습니다.")
 #             return redirect("accounts:profile")
-
+#
 #     return render(
 #         request,
 #         "accounts/password_change_form.html",
@@ -262,6 +287,7 @@ logout = LogoutView.as_view(
 #             "form": form,
 #         },
 #     )
+
 
 class PasswordChangeView(DjangoPasswordChangeView):
     success_url = reverse_lazy("accounts:profile")
