@@ -171,27 +171,51 @@ def memo_form(request, group_pk):
         },
     )
 
-def tag_list(request):
-    tag_qs = Tag.objects.all()
+# def tag_list(request):
+#     tag_qs = Tag.objects.all()
 
-    query = request.GET.get("query", "")
-    if query:
-        tag_qs = tag_qs.filter(name__icontains=query)
+#     query = request.GET.get("query", "")
+#     if query:
+#         tag_qs = tag_qs.filter(name__icontains=query)
 
-    # is_htmx = bool(request.htmx)  # request.META.get("HTTP_HX_REQUEST") == "true"
-    # if is_htmx:
-    if request.htmx:
-        template_name = "blog/_tag_list.html"
-    else:
-        template_name = "blog/tag_list.html"
+#     # is_htmx = bool(request.htmx)  # request.META.get("HTTP_HX_REQUEST") == "true"
+#     # if is_htmx:
+#     if request.htmx:
+#         template_name = "blog/_tag_list.html"
+#     else:
+#         template_name = "blog/tag_list.html"
 
-    return render(
-        request,
-        template_name,
-        {
-            "tag_list": tag_qs,
-        },
-    )
+#     return render(
+#         request,
+#         template_name,
+#         {
+#             "tag_list": tag_qs,
+#         },
+#     )
+
+
+class TagListView(ListView):
+    model = Tag
+    queryset = Tag.objects.all()
+    paginate_by = 5
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        query = self.request.GET.get("query", "")
+        if query:
+            qs = qs.filter(name__icontains=query)
+        return qs
+
+    def get_template_names(self) -> list[str]:
+        if self.request.htmx:
+            template_name = "blog/_tag_list.html"
+        else:
+            template_name = "blog/tag_list.html"
+        return [template_name]
+
+
+tag_list = TagListView.as_view()
+
 
 def tag_new(request):
     if request.method == "GET":
