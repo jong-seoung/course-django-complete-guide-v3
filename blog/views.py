@@ -197,8 +197,8 @@ def memo_form(request, group_pk):
 class TagListView(ListView):
     model = Tag
     queryset = Tag.objects.all()
-    paginate_by = 5
-
+    paginate_by = 10
+    
     def get_queryset(self):
         qs = super().get_queryset()
         query = self.request.GET.get("query", "")
