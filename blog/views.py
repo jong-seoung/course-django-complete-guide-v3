@@ -198,7 +198,7 @@ class TagListView(ListView):
     model = Tag
     queryset = Tag.objects.all()
     paginate_by = 10
-    
+
     def get_queryset(self):
         qs = super().get_queryset()
         query = self.request.GET.get("query", "")
@@ -217,11 +217,16 @@ class TagListView(ListView):
 tag_list = TagListView.as_view()
 
 
-def tag_new(request):
-    if request.method == "GET":
-        form = TagForm()
+def tag_new(request, pk=None):
+    if pk:
+        instance = get_object_or_404(Tag, pk=pk)
     else:
-        form = TagForm(data=request.POST)
+        instance = None
+
+    if request.method == "GET":
+        form = TagForm(instance=instance)
+    else:
+        form = TagForm(data=request.POST, instance=instance)
         if form.is_valid():
             form.save()
             messages.success(request, "태그를 저장했습니다.")
@@ -255,6 +260,10 @@ def tag_new(request):
             "form": form,
         },
     )
+
+
+def tag_edit(request, pk):
+    return tag_new(request, pk)
 
 
 @require_http_methods(["DELETE"])
