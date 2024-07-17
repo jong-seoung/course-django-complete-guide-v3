@@ -221,6 +221,10 @@ if DEBUG:
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+# COMPONENTS = {
+#     "slot_context_behavior": "allow_override",
+# }
+
 STATICFILES_DIRS = [
     BASE_DIR / "components" / "src-django-components",
 ]
