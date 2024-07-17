@@ -7,7 +7,15 @@
 {% block content %}
     <h2>태그 목록</h2>
     
-    <div hx-get="{% url 'blog:tag_new' %}" hx-trigger="load" hx-vals = "js:{timestamp:new Date().getTime()}"></div>
+    <button class="btn btn-primary"
+    hx-get="{% url 'blog:tag_new' %}"
+    hx-vals = "js:{timestamp:new Date().getTime()}"
+    hx-trigger="click"
+    hx-target="#modal-container"
+    hx-swap="innerHTML"
+    >
+    새 태그
+    </button>
 
     <button class="btn btn-primary my-3"
             hx-get="{% url 'blog:tag_list' %}?page={{ request.GET.page|default:1 }}"
@@ -20,7 +28,7 @@
     <div class="position-relative">
         <input type="text" name="query" class="form-control my-3"
                hx-get="{% url 'blog:tag_list' %}"
-               hx-get-with-timestamp
+               hx-vals = "js:{timestamp:new Date().getTime()}"
                hx-trigger="keyup[target.value.length === 0 || target.value.length >= 2] changed delay:400ms"
                hx-target="#tag-list-container .list-group"
                hx-swap="innerHTML transition:true"

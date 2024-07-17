@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'core.crispy_bootstrap5_ext',
-    'formtools'
+    'formtools',
+    'template_partials',
 ]
 
 if DEBUG:

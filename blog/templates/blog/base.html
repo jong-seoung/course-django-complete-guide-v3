@@ -17,6 +17,10 @@
     {% block content %}{% endblock %}
 </main>
 
+
+{# Modal이 위치할 요소를 먼저 정의합니다. #}
+<div id="modal-container"></div>
+
 {% bootstrap_javascript %}
 <script src="{% static 'core/toast-messages.js' %}"></script>
 {% include "core/_messages_as_event.html" %}
