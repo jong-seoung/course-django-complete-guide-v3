@@ -1,14 +1,19 @@
 {# blog/templates/blog/_tag_list.html : HTML 레이아웃없이 컨텐츠로만 구성 #}
 
 {% for tag in tag_list %}
-    <div class="list-group-item"
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+        {{ tag.name }}
+        <span
+        class="text-danger"
         style="cursor: pointer;"
         hx-trigger="click"
         hx-confirm="{{ tag.name }} 태그를 삭제하시겠습니까?"
         hx-delete="{% url 'blog:tag_delete' tag.pk %}"
+        hx-target="closest .list-group-item"
         hx-swap="delete"
-    >
-        {{ tag.name }}
+        >
+            X
+        </span>
     </div>
 
     {% if forloop.last %}
