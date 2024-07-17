@@ -46,9 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # 'django.contrib.staticfiles',
+    "django_components.safer_staticfiles",
     "django.forms",
     "django_bootstrap5",
+    "django_components",
     "django_htmx",
     'core',
     'hottrack',
@@ -95,6 +97,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         "DIRS": [
             BASE_DIR / "config" / "templates",
+            BASE_DIR / "components" / "src-django-components",
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -217,6 +220,10 @@ if DEBUG:
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+STATICFILES_DIRS = [
+    BASE_DIR / "components" / "src-django-components",
+]
 
 STATIC_URL = 'static/'
 
