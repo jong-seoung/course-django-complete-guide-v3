@@ -1,4 +1,4 @@
-# melon/utils/cover.py
+# hottrack/utils/cover.py
 
 from io import BytesIO
 
