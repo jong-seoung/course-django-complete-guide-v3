@@ -1,0 +1,1 @@
+INSERT INTO blog_review (message, rating) VALUES ('',6);
