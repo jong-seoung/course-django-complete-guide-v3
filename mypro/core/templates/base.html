@@ -36,12 +36,15 @@
             {% else %}
                 <a href="{% url 'accounts:profile' %}">
                 <a href="#" class="btn btn-outline-light me-2">프로필</a>
-                <a href="#" class="btn btn-warning">로그아웃</a>
+                <a hx-post="{% url 'accounts:logout' %}"
+                hx-target="body"
+                hx-push-url="true"
+                 class="btn btn-warning">로그아웃</a>
             {% endif %}
         </div>
         </div>
     </div>
-    </header>
+</header>
 
 <main class="py-5">
     <div class="container">
