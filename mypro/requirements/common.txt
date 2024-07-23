@@ -6,3 +6,4 @@ django-htmx==1.18.
 django-crispy-forms==2.2
 crispy-bootstrap5==2024.2
 django_components==0.84
+pillow==10.4.0
