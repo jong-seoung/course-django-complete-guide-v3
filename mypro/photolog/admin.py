@@ -4,6 +4,7 @@ from .models import Note, Photo
 
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
+    list_display = ["title"]
     pass
 
 
