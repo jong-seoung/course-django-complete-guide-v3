@@ -192,3 +192,13 @@ else:
     except ImproperlyConfigured as e:
         print("ERROR:", e, file=sys.stderr)
         EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+# django-components
+#  - context variable를 resolve하는 방식이 변경
+#    https://github.com/EmilStenstrom/django-components/?tab=readme-ov-file#isolate-components-slots
+
+COMPONENTS = {
+    # 0.67 미만 버전과 동일한 동작을 맞추기 위한 설정 (강의에서는 0.61 버전)
+    "slot_context_behavior": "allow_override",  # 디폴트: "prefer_root"
+}
