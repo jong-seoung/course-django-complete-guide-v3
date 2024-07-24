@@ -7,6 +7,7 @@ from PIL import Image
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import force_str
 from django_lifecycle import LifecycleModelMixin, hook, BEFORE_SAVE
@@ -24,6 +25,10 @@ class Note(models.Model):
     class Meta:
         ordering = ["-pk"]
 
+    def get_absolute_url(self) -> str:
+        return reverse("photolog:note_detail", args=[self.pk])
+    
+    
 def uuid_name_upload_to(instance: models.Model, filename: str) -> str:
     app_label = instance.__class__._meta.app_label
     cls_name = instance.__class__.__name__.lower()

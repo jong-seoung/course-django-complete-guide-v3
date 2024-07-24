@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 
 from photolog.forms import NoteForm
 from photolog.models import Note, Photo
@@ -39,3 +39,7 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, "새 기록을 저장했습니다.")
 
         return redirect(self.get_success_url())
+
+
+class NoteDetailView(DetailView):
+    model = Note
