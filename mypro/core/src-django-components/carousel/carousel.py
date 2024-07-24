@@ -21,6 +21,7 @@ class Carousel(Component):
 
     class Media:
         js = [
+            "observe-node-insertion.js",
             "carousel/carousel.js",
         ]
         css = {
