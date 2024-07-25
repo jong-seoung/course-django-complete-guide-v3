@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, note_edit, NoteCreateView, NoteDetailView, CommentCreateView, CommentListView, CommentUpdateView
+from .views import index, note_edit, NoteCreateView, NoteDetailView, CommentCreateView, CommentListView, CommentUpdateView, CommentDeleteView
 
 app_name = "photolog"
 
@@ -12,5 +12,10 @@ urlpatterns = [
     path("<int:note_pk>/comments/new/", CommentCreateView.as_view(), name="comment_new"),
     path(
         "<int:note_pk>/comments/<int:pk>/edit/", CommentUpdateView.as_view(), name="comment_edit"
+    ),
+        path(
+        "<int:note_pk>/comments/<int:pk>/delete/",
+        CommentDeleteView.as_view(),
+        name="comment_delete",
     ),
 ]
