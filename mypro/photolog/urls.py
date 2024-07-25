@@ -1,11 +1,12 @@
 from django.urls import path
-from .views import index, note_edit, NoteCreateView, NoteDetailView, CommentCreateView, CommentListView, CommentUpdateView, CommentDeleteView
+from .views import index, note_edit, NoteCreateView, NoteDetailView, CommentCreateView, CommentListView, CommentUpdateView, CommentDeleteView, user_page
 
 app_name = "photolog"
 
 urlpatterns = [
     path("", index, name="index"),
     path("new/", NoteCreateView.as_view(), name="note_new"),
+    path("@<username>/", user_page, name="user_page"),
     path("<int:pk>/", NoteDetailView.as_view(), name="note_detail"),
     path("<int:pk>/edit/", note_edit, name="note_edit"),
     path("<int:note_pk>/comments/", CommentListView.as_view(), name="comment_list"),

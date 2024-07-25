@@ -8,6 +8,7 @@ from django.views.generic import CreateView, DetailView, UpdateView, ListView, D
 from django_htmx.http import trigger_client_event
 
 
+from accounts.models import User
 from core.decorators import login_required_hx
 from photolog.forms import (
     NoteCreateForm,
@@ -131,7 +132,23 @@ class CommentListView(ListView):
         qs = qs.select_related("author__profile")
 
         return qs
-    
+
+
+def user_page(request, username):
+    author = get_object_or_404(User, is_active=True, username=username)
+
+    note_qs = Note.objects.filter(author=author)
+    note_qs = note_qs.select_related("author").prefetch_related("photo_set", "tags")
+
+    return render(
+        request,
+        "photolog/user_page.html",
+        {
+            "author": author,
+            "note_list": note_qs,
+        },
+    )
+
 
 @method_decorator(login_required_hx, name="dispatch")
 class CommentCreateView(CreateView):
