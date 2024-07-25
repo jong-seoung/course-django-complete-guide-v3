@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, ListView
 from django_htmx.http import trigger_client_event
 
 
@@ -112,6 +112,17 @@ class NoteDetailView(DetailView):
     model = Note
 
 
+class CommentListView(ListView):
+    model = Comment
+    template_name = "photolog/_comment_list.html"
+
+    def get_queryset(self):
+        note_pk = self.kwargs["note_pk"]
+        qs = super().get_queryset()
+        qs = qs.filter(note__pk=note_pk)
+        return qs
+    
+    
 @method_decorator(login_required_hx, name="dispatch")
 class CommentCreateView(CreateView):
     model = Comment
