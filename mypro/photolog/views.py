@@ -111,6 +111,14 @@ def note_edit(request, pk):
 class NoteDetailView(DetailView):
     model = Note
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        note = self.object
+        context_data["comment_list"] = note.comment_set.select_related(
+            "author__profile"
+        )
+        return context_data
+
 
 class CommentListView(ListView):
     model = Comment
@@ -120,9 +128,11 @@ class CommentListView(ListView):
         note_pk = self.kwargs["note_pk"]
         qs = super().get_queryset()
         qs = qs.filter(note__pk=note_pk)
+        qs = qs.select_related("author__profile")
+
         return qs
     
-    
+
 @method_decorator(login_required_hx, name="dispatch")
 class CommentCreateView(CreateView):
     model = Comment

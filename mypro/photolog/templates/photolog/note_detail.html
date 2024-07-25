@@ -54,9 +54,7 @@
     >댓글 쓰기</a>
     
     <div id="comment-list" class="my-3">
-        {% with comment_list=note.comment_set.all %}
         {% include "photolog/_comment_list.html" with comment_list=comment_list only %}
-        {% endwith %}
     </div>
 
     <a href="#"
@@ -65,5 +63,5 @@
        hx-trigger="click, refresh-comment-list from:body"
        hx-target="#comment-list"
        class="btn btn-primary w-100">댓글 새로고침</a>
-       
+
 {% endblock %}
