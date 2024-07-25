@@ -1,11 +1,13 @@
+from typing import Literal
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, UpdateView, ListView, DeleteView
-from django_htmx.http import trigger_client_event
+from django_htmx.http import trigger_client_event, HttpResponseClientRedirect
 
 
 from accounts.models import User
@@ -35,6 +37,39 @@ def index(request):
             "note_list": note_qs,
         },
     )
+
+
+def user_follow(request, username: str, action: Literal["follow", "unfollow"]):
+    from_user: User = request.user
+    to_user = get_object_or_404(User, is_active=True, username=username)
+
+    if request.method == "GET":
+        if from_user.is_authenticated:
+            is_follower = from_user.is_follower(to_user)
+        else:
+            is_follower = False
+    else:
+        if from_user.is_authenticated:
+            if action == "follow":
+                from_user.follow(to_user)
+                is_follower = True
+            else:
+                from_user.unfollow(to_user)
+                is_follower = False
+        else:
+            next_url = request.META.get("HTTP_HX_CURRENT_URL", "")
+            redirect_url = reverse("accounts:login") + "?next=" + next_url
+            return HttpResponseClientRedirect(redirect_url)
+
+    return render(
+        request,
+        "photolog/_user_follow.html",
+        {
+            "is_follower": is_follower,
+            "username": username,
+        },
+    )
+
 
 class NoteCreateView(LoginRequiredMixin, CreateView):
     model = Note
