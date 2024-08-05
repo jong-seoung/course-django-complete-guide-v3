@@ -22,6 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = Env()
 
+ENV_PATH = Path(env.str("ENV_PATH", default=str(BASE_DIR / ".env")))
+
 ENV_PATH = BASE_DIR / ".env"
 if ENV_PATH.exists():
     with ENV_PATH.open(encoding="utf-8") as f:
@@ -108,7 +110,9 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
+DEFAULT_DATABASE_URL = f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+
+DATABASES = {"default": env.db(default=DEFAULT_DATABASE_URL),}
 
 
 # Password validation
@@ -141,16 +145,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
-
-STATICFILES_DIRS = [BASE_DIR / "core" / "src-django-components"]
-
+STATIC_URL = env.str("STATIC_URL", default="static/")
+STATIC_ROOT = env.str("STATIC_ROOT", default=BASE_DIR / "staticfiles")
 
 # Media files
 
-MEDIA_URL = "media/"
+MEDIA_URL = env.str("MEDIA_URL", default="media/")
 
-MEDIA_ROOT = BASE_DIR / "mediafiles"
+MEDIA_ROOT = env.str("MEDIA_ROOT", default=BASE_DIR / "mediafiles")
 
 
 # Default primary key field type
