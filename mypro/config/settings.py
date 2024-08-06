@@ -24,7 +24,6 @@ env = Env()
 
 ENV_PATH = Path(env.str("ENV_PATH", default=str(BASE_DIR / ".env")))
 
-ENV_PATH = BASE_DIR / ".env"
 if ENV_PATH.exists():
     with ENV_PATH.open(encoding="utf-8") as f:
         env.read_env(f, overwrite=True)
