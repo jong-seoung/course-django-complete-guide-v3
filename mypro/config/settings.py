@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import sys
+from email.utils import getaddresses
 from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
@@ -30,6 +31,8 @@ if ENV_PATH.exists():
 else:
     print("not found:", ENV_PATH, file=sys.stderr)
 
+
+ADMINS = getaddresses([env.str("ADMINS", default="")])
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -196,6 +199,7 @@ else:
         EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
         EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
         DEFAULT_FROM_EMAIL = env.str("DEFAULT_FROM_EMAIL")
+        SERVER_EMAIL = env.str("SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
     except ImproperlyConfigured as e:
         print("ERROR:", e, file=sys.stderr)
         EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
