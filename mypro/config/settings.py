@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "django_components",
     "django_htmx",
+    "rest_framework",
     "taggit",
     "template_partials",
     # local apps
@@ -151,6 +152,10 @@ USE_TZ = True
 
 STATIC_URL = env.str("STATIC_URL", default="static/")
 STATIC_ROOT = env.str("STATIC_ROOT", default=BASE_DIR / "staticfiles")
+
+STATICFILES_DIRS = [
+    BASE_DIR / "core" / "src-django-components",
+]
 
 # Media files
 
