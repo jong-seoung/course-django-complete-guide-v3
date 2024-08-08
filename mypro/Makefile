@@ -22,9 +22,6 @@ showmigrations:
 migrate:
 	$(MANAGE) migrate
 
-createsuperuser:
-	$(MANAGE) createsuperuser
-
 log:
 	journalctl -u django --since "1 hour ago" -f
 	
