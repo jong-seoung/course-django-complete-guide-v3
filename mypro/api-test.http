@@ -57,8 +57,8 @@ title=샘플+제목+수정&content=샘플+내용
 
 ### (수정/PATCH) 성공하는 form-urlencoded (업데이트할 필드만 지정)
 
-PATCH {{BASE_URL}}/blog/api/101/edit/
-Authorization: Basic 유저명 암호
+PATCH {{BASE_URL}}/blog/api/100/edit/
+Authorization: Basic baeareum baeareum
 Content-Type: application/x-www-form-urlencoded
 
 title=샘플+제목+수정2
