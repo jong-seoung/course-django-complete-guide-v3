@@ -81,6 +81,7 @@ post_new = PostCreateAPIView.as_view()
 
 class PostUpdateAPIView(PermissionDebugMixin, TestFuncPermissionMixin, UpdateAPIView):
     TEST_FUNC_PERMISSION_CLASS_NAME = "PostUpdateAPIView"
+    queryset = PostSerializer.get_optimized_queryset()
     serializer_class = PostSerializer
     # permission_classes = [IsAuthorOrReadonly]
     # permission_classes = [
@@ -100,6 +101,11 @@ class PostUpdateAPIView(PermissionDebugMixin, TestFuncPermissionMixin, UpdateAPI
         if request.method in SAFE_METHODS:
             return True 
         return request.user.is_authenticated
+    
+    def has_object_permission(self, request: Request, view: APIView, obj: Post) -> bool: 
+        if request.method in SAFE_METHODS: 
+            return True 
+        return obj.author == request.user
 
 post_edit = PostUpdateAPIView.as_view()
 
