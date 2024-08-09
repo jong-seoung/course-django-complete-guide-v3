@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -43,3 +44,13 @@ class PostRetrieveAPIView(JSONResponseWrapperMixin, RetrieveAPIView):
     serializer_class = PostDetailSerializer
 
 post_detail = PostRetrieveAPIView.as_view()
+
+class PostCreateAPIView(CreateAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+post_new = PostCreateAPIView.as_view()
