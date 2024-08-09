@@ -20,6 +20,7 @@ from core.mixins import (
     JSONResponseWrapperMixin,
     PermissionDebugMixin,
     TestFuncPermissionMixin,
+    ActionBasedViewSetMixin,
 )
 from core.permissions import (
     IsAuthorOrReadonly,
@@ -119,10 +120,25 @@ from .serializers import PostSerializer, PostListSerializer, PostDetailSerialize
 # post_delete = PostDestroyAPIView.as_view()
 
 
-class PostModelViewSet(ModelViewSet):
+class PostModelViewSet(ActionBasedViewSetMixin, ModelViewSet):
     queryset = Post.objects.all()
+    queryset_map = {
+        "list": PostListSerializer.get_optimized_queryset(),
+        "retrieve": PostDetailSerializer.get_optimized_queryset(),
+        "update": PostSerializer.get_optimized_queryset(),
+        "partial_update": PostSerializer.get_optimized_queryset(),
+        "destroy": Post.objects.all(),
+    }
     serializer_class = PostSerializer
+    serializer_class_map = {
+        "list": PostListSerializer,
+        "retrieve": PostDetailSerializer,
+        "create": PostSerializer,
+        "update": PostSerializer,
+        "partial_update": PostSerializer,
+    }
     permission_classes = [IsAuthorOrReadonly]
+
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
