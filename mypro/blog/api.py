@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
@@ -24,6 +25,20 @@ class PostListAPIView(ListAPIView):
     serializer_class = PostListSerializer
 
 
+    def list(self, request: Request, *args, **kwargs):
+        response: Response = super().list(request, *args, **kwargs)
+
+        if isinstance(request.accepted_renderer, (JSONRenderer, BrowsableAPIRenderer)):
+            response.data = ReturnDict(
+                {
+                    "ok": True,
+                    "result": response.data,  # ReturnList
+                },
+                serializer=response.data.serializer,
+            )
+
+        return response
+    
 post_list = PostListAPIView.as_view()
 
 
@@ -41,5 +56,18 @@ class PostRetrieveAPIView(RetrieveAPIView):
     queryset = PostDetailSerializer.get_optimized_queryset()
     serializer_class = PostDetailSerializer
 
+    def retrieve(self, request: Request, *args, **kwargs):
+        response: Response = super().retrieve(request, *args, **kwargs)
+
+        if isinstance(request.accepted_renderer, (JSONRenderer, BrowsableAPIRenderer)):
+            response.data = ReturnDict(
+                {
+                    "ok": True,
+                    "result": response.data,  # ReturnDict
+                },
+                serializer=response.data.serializer,
+            )
+
+        return response
 
 post_detail = PostRetrieveAPIView.as_view()
