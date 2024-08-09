@@ -5,6 +5,7 @@ from rest_framework.generics import (
     RetrieveAPIView,
     CreateAPIView,
     UpdateAPIView,
+    DestroyAPIView,
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
@@ -31,6 +32,7 @@ class PostListAPIView(JSONResponseWrapperMixin, ListAPIView):
     queryset = PostListSerializer.get_optimized_queryset()
     serializer_class = PostListSerializer
     
+    
 post_list = PostListAPIView.as_view()
 
 
@@ -48,7 +50,9 @@ class PostRetrieveAPIView(JSONResponseWrapperMixin, RetrieveAPIView):
     queryset = PostDetailSerializer.get_optimized_queryset()
     serializer_class = PostDetailSerializer
 
+
 post_detail = PostRetrieveAPIView.as_view()
+
 
 class PostCreateAPIView(CreateAPIView):
     serializer_class = PostSerializer
@@ -71,3 +75,11 @@ class PostUpdateAPIView(UpdateAPIView):
 
 
 post_edit = PostUpdateAPIView.as_view()
+
+
+class PostDestroyAPIView(DestroyAPIView):
+    queryset = Post.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+post_delete = PostDestroyAPIView.as_view()
