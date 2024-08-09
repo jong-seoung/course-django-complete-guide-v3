@@ -26,7 +26,11 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ["id", "title", "content"]
 
-
+    @staticmethod
+    def get_optimized_queryset() -> QuerySet[Post]:
+        return Post.objects.all()
+    
+    
 class PostListSerializer(serializers.ModelSerializer):
     author = AuthorSerializer()
 
