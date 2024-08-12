@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django_components.safer_staticfiles",
     # third apps
+    "corsheaders",
     "django_extensions",
     "crispy_forms",
     "crispy_bootstrap5",
@@ -79,6 +80,7 @@ if DEBUG:
     INSTALLED_APPS += ["debug_toolbar"]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -246,3 +248,12 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": env.int("REST_FRAMEWORK_PAGE_SIZE", 5),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
 }
+
+# django-cors-headers
+# https://github.com/adamchainz/django-cors-headers
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
+CORS_ALLOW_CREDENTIALS = True
