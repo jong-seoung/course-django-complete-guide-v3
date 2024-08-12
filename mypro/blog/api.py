@@ -8,7 +8,7 @@ from rest_framework.generics import (
     UpdateAPIView,
     DestroyAPIView,
 )
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.request import Request
@@ -141,8 +141,8 @@ class PostModelViewSet(ActionBasedViewSetMixin, ModelViewSet):
     }
     permission_classes = [IsAuthorOrReadonly]
 
-    # pagination_class = PageNumberPagination
-    pagination_class = make_pagination_class(page_size=20)
+    pagination_class = LimitOffsetPagination
+    # pagination_class = make_pagination_class(page_size=20)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
