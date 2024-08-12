@@ -8,7 +8,7 @@ from rest_framework.generics import (
     UpdateAPIView,
     DestroyAPIView,
 )
-from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination, CursorPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.request import Request
@@ -121,6 +121,8 @@ from .serializers import PostSerializer, PostListSerializer, PostDetailSerialize
 #
 # post_delete = PostDestroyAPIView.as_view()
 
+class PkCursorPagination(CursorPagination):
+    ordering = "-pk"
 
 class PostModelViewSet(ActionBasedViewSetMixin, ModelViewSet):
     queryset = Post.objects.all()
@@ -143,9 +145,10 @@ class PostModelViewSet(ActionBasedViewSetMixin, ModelViewSet):
 
     # pagination_class = make_pagination_class(page_size=20)
     # pagination_class = LimitOffsetPagination
-    pagination_class = make_pagination_class(
-        cls_type="limit_offset", page_size=10, max_limit=10
-    )
+    # pagination_class = make_pagination_class(
+    #     cls_type="limit_offset", page_size=10, max_limit=10
+    # )
+    pagination_class = PkCursorPagination
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
