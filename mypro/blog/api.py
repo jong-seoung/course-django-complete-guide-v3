@@ -17,6 +17,7 @@ from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from core.pagination import make_pagination_class
 from core.mixins import (
     JSONResponseWrapperMixin,
     PermissionDebugMixin,
@@ -140,7 +141,8 @@ class PostModelViewSet(ActionBasedViewSetMixin, ModelViewSet):
     }
     permission_classes = [IsAuthorOrReadonly]
 
-    pagination_class = PageNumberPagination
+    # pagination_class = PageNumberPagination
+    pagination_class = make_pagination_class(page_size=20)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
