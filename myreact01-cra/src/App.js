@@ -3,8 +3,22 @@ import {useState} from 'react';
 function Counter( {initialCount} ){
   const [count, setCount] = useState(initialCount);
 
+  const increment = () => {
+    console.log("increment","count=",count);
+    // setCount(count + 1);
+    // setCount(count + 1);
+    setCount(prevCount => prevCount+1);
+    setCount(prevCount => prevCount+1);
+  }
+  const decrement = () => {
+    setCount(prevCount => prevCount-1);
+  }
   return (
-    <button onClick={()=> setCount(count + 1)}>{count}</button>
+    <button onClick={()=> increment()} 
+    onContextMenu={(e)=>{
+      e.preventDefault();
+       decrement()}}
+       >{count}</button>
   )
 }
 
