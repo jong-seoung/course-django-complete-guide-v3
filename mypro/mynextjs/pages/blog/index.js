@@ -3,14 +3,21 @@
 import { useEffect, useState } from "react";
 
 export async function getServerSideProps(context) {
-  const url = "http://localhost:8000/blog/whoami/";
-  const response = await fetch(url);
-  const responseText = `상태코드: ${response.status}
 
-${await response.text()}`;
+    // http://localhost:3000 에서의 쿠키를 API 요청에 활용
+    const headers = {
+        Cookie: context.req.headers.cookie,
+    };
+    console.log("headers: ", headers);
 
-  // props로 전달한 값이 컴포넌트의 속성값으로 주입
-  return { props: { message: responseText } };
+    const url = "http://localhost:8000/blog/whoami/";
+    const response = await fetch(url, { headers });
+    const responseText = `상태코드: ${response.status}
+
+    ${await response.text()}`;
+
+    // props로 전달한 값이 컴포넌트의 속성값으로 주입
+    return { props: { message: responseText } };
 }
 
 function WhoamiPage({ message }) {
