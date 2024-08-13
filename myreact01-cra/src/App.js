@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Counter({ initialCount }) {
   const [count, setCount] = useState(() => {
@@ -6,6 +6,7 @@ function Counter({ initialCount }) {
     if (initialCount<=0) return 0;
     return initialCount;
   });
+  const [color, setColor] = useState("yellow");
 
   const increment = () => {
     setCount((prevCount) => {
@@ -21,8 +22,15 @@ function Counter({ initialCount }) {
     });
   };
 
+  useEffect(()=>{
+    console.log(`${count} 값으로 색상을 결정합니다.`);
+    if (count % 2 === 0) setColor("red");
+    else setColor("yellow");
+    }, [count]); 
+
   return (
     <button
+      style={{ backgroundColor: color }}
       onClick={() => increment()}
       onContextMenu={e => {
         e.preventDefault();
