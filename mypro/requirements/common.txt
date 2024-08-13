@@ -20,3 +20,6 @@ pytest==8.3.2
 pytest-django==4.8.0
 pytest-testdox==3.1.0
 factory-boy==3.3.0
+
+django-nextjs==3.2.0
+channels[daphne]==4.1.2
