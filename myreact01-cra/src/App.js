@@ -1,7 +1,11 @@
 import { useState } from "react";
 
 function Counter({ initialCount }) {
-  const [count, setCount] = useState(initialCount);
+  const [count, setCount] = useState(() => {
+    if (initialCount>=10) return 10;
+    if (initialCount<=0) return 0;
+    return initialCount;
+  });
 
   const increment = () => {
     setCount((prevCount) => {
