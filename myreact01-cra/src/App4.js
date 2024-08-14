@@ -1,3 +1,5 @@
+import Profile from "./components/Profile";
+import Message from "./components/Message";
 import TextInput from "./components/TextInput";
 
 // function Button({ onClick, children }) {
@@ -11,6 +13,10 @@ function App() {
 
   return (
     <div>
+        <div style={{ display:"flex", gap:"10px",margin:"10px"}}>
+            <Message />
+            <Profile />
+        </div>
         <TextInput name={"username"}></TextInput>
         <TextInput name={"email"}></TextInput>
       {/* <button onClick={(e) => handleClick(e)}>
