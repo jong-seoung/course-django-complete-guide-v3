@@ -10,7 +10,7 @@ import "./index.css";
 import App7 from "./App7";
 import reportWebVitals from "./reportWebVitals";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
