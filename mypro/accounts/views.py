@@ -1,5 +1,6 @@
 from typing import Optional
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -54,9 +55,12 @@ class LoginView(DjangoLoginView):
     extra_context = {
         "form_title": "로그인",
     }
+    success_url_allowed_hosts: set = settings.SUCCESS_URL_ALLOWED_HOSTS
+
 
 class LogoutView(DjangoLogoutView):
     next_page = "accounts:login"
+    success_url_allowed_hosts: set = settings.SUCCESS_URL_ALLOWED_HOSTS
 
     def dispatch(self, request, *args, **kwargs):
         response = super().dispatch(request, *args, **kwargs)
