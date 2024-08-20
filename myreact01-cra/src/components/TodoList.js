@@ -24,10 +24,18 @@ function TodoList() {
     // setTodoList(newTodoList);
 
     setTodoList(
-        produce((draftTodoList) => {
-          draftTodoList[todoIndex].done = !draftTodoList[todoIndex].done;
-        }),
-      );
+      produce((draftTodoList) => {
+        draftTodoList[todoIndex].done = !draftTodoList[todoIndex].done;
+      }),
+    );
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const text = e.target.content.value.trim();
+    setTodoList((prev) => [...prev, { text, done: false }]);
+    e.target.reset();
   };
 
   return (
@@ -37,7 +45,7 @@ function TodoList() {
       {todoList.length === 0 && (
         <div style={{ color: "indianred" }}>등록된 할일이 없습니다.</div>
       )}
-      
+
       {todoList.map((todo, index) => {
         return (
           <li
@@ -49,6 +57,10 @@ function TodoList() {
           </li>
         );
       })}
+
+      <form onSubmit={(e) => handleSubmit(e)}>
+        <input type="text" name="content" autoComplete="off" />
+      </form>
     </div>
   );
 }
