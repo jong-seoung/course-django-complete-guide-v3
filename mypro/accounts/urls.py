@@ -9,6 +9,7 @@ urlpatterns_api_v1 = [
 ]
 
 urlpatterns = [
+    path("api/", include((urlpatterns_api_v1, "api-v1"))),
     path("signup/", SignupView.as_view(), name="signup"),
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
