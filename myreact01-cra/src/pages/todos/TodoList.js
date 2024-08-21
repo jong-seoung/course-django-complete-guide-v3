@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { produce } from "immer";
 import TodoForm from "../../components/TodoForm";
 import { Button, Card, Container, ListGroup } from "react-bootstrap";
@@ -9,8 +9,16 @@ const DONE_STYLE = { textDecoration: "line-through" };
 const TODO_REST_API = makeRestApi("blog/api/todos/");
 
 function TodoList() {
-  const [{data: todoList = [], loading, error: loadingError}, refetch] =
-  useApiAxios("blog/api/todos/");
+  const [
+    { data: origTodoList = undefined, loading, error: loadingError },
+    refetch,
+  ] = useApiAxios("/blog/api/todos/");
+
+  const [todoList, setTodoList] = useState([]);
+
+  useEffect(() => {
+    setTodoList(origTodoList || []);
+  }, [origTodoList]);
 
   const toggleTodo = async (todoIndex) => {
     console.log(`인덱스#${todoIndex}를 토글합니다.`);
@@ -19,23 +27,14 @@ function TodoList() {
     const { data, error } = await TODO_REST_API.update(todo.id, {
       done: !todo.done,
     });
-    console.log("응답 데이터 :", data);
-    refetch();
-    // todoList[todoIndex].done = !todoList[todoIndex].done;
+    if (data) {
+      const editedTodo = data;
 
-    // const newTodoList = todoList.map((todo, index) => {
-    //   if (index === todoIndex) {
-    //     return { ...todo, done: !todo.done };
-    //   }
-    //   return todo;
-    // });
-    // setTodoList(newTodoList);
-
-    // setTodoList(
-    //   produce(draftTodoList => {
-    //     draftTodoList[todoIndex].done = !draftTodoList[todoIndex].done;
-    //   })
-    // );
+      setTodoList(
+        produce((draftTodoList) => {
+          draftTodoList[todoIndex].done = editedTodo;
+        })
+      )}
   };
 
   // const handleSubmit = (e) => {
