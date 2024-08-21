@@ -3,11 +3,11 @@ from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 from . import views
 from . import api
-from .api import PostModelViewSet
+from .api import PostModelViewSet, TodoViewSet
 
 router = DefaultRouter()
 router.register(prefix="posts", viewset=PostModelViewSet)
-
+router.register(prefix="todos", viewset=TodoViewSet)
 
 urlpatterns = [
     # path("", TemplateView.as_view(template_name="blog/index.html"), name="index"),
