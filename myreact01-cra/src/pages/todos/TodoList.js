@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { produce } from "immer";
-import TodoForm from "./TodoForm";
+import TodoForm from "../../components/TodoForm";
 import { Button, Card, Container, ListGroup } from "react-bootstrap";
 
 const INITIAL_TODO_LIST = [
@@ -13,7 +13,7 @@ const DONE_STYLE = { textDecoration: "line-through" };
 function TodoList() {
   const [todoList, setTodoList] = useState(INITIAL_TODO_LIST);
 
-  const toggleTodo = (todoIndex) => {
+  const toggleTodo = todoIndex => {
     console.log(`인덱스#${todoIndex}를 토글합니다.`);
     // todoList[todoIndex].done = !todoList[todoIndex].done;
 
@@ -26,9 +26,9 @@ function TodoList() {
     // setTodoList(newTodoList);
 
     setTodoList(
-      produce((draftTodoList) => {
+      produce(draftTodoList => {
         draftTodoList[todoIndex].done = !draftTodoList[todoIndex].done;
-      }),
+      })
     );
   };
 
@@ -40,27 +40,27 @@ function TodoList() {
   //   e.target.reset();
   // };
 
-  const addTodo = (newText) => {
-    setTodoList((prev) => [...prev, { text: newText, done: false }]);
+  const addTodo = newText => {
+    setTodoList(prev => [...prev, { text: newText, done: false }]);
   };
 
-  const deleteTodo = (todoIndex) => {
+  const deleteTodo = todoIndex => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      setTodoList((prev) => {
+      setTodoList(prev => {
         return prev.filter((_, index) => index !== todoIndex);
       });
     }
   };
 
-  const editTodo = (todoIndex) => {
+  const editTodo = todoIndex => {
     const todo = todoList[todoIndex];
     const origText = todo.text;
     const promptText = window.prompt("수정할 내용을 입력하세요.", origText);
     if (promptText !== null && promptText !== origText) {
       setTodoList(
-        produce((draftTodoList) => {
+        produce(draftTodoList => {
           draftTodoList[todoIndex].text = promptText;
-        }),
+        })
       );
     }
   };
@@ -115,7 +115,7 @@ function TodoList() {
         </ListGroup>
 
         <Card.Body>
-          <TodoForm onEnter={(newText) => addTodo(newText)} />
+          <TodoForm onEnter={newText => addTodo(newText)} />
         </Card.Body>
       </Card>
     </Container>
