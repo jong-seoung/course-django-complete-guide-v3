@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { ToastContainer } from "react-toastify";
 import "./index.css";
 // import App from "./App";
 // import App2 from "./App2";
@@ -13,6 +14,8 @@ import reportWebVitals from "./reportWebVitals";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import "react-toastify/dist/ReactToastify.css";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
@@ -24,6 +27,15 @@ root.render(
     {/* <App6 /> */}
     {/* <App7 /> */}
     <App8 />
+    <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        newestOnTop={true}
+        closeOnClick={true}
+        hideProgressBar={true}
+        pauseOnHover={true}
+        draggable={false}
+      />
   </React.StrictMode>,
 );
 
